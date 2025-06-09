@@ -71,6 +71,30 @@
                         @enderror
                     </div>
 
+                    <!-- Categoría -->
+                    <div class="mb-8">
+                        <label for="category" class="block text-sm font-semibold text-gray-700 mb-3">
+                            <svg class="w-5 h-5 inline mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"></path>
+                            </svg>
+                            Categoría
+                        </label>
+                        <select name="category" id="category" required
+                                class="w-full border-2 rounded-xl p-4 @error('category') border-red-500 @else border-gray-300 @enderror focus:border-orange-500 focus:outline-none transition duration-200 text-lg bg-white">
+                            <option value="">Seleccioná una categoría</option>
+                            <option value="comida" {{ old('category') == 'comida' ? 'selected' : '' }}>🥘 Comida</option>
+                            <option value="postre" {{ old('category') == 'postre' ? 'selected' : '' }}>🍰 Postre</option>
+                        </select>
+                        @error('category')
+                            <p class="text-red-500 text-sm mt-2 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
                     <!-- Imagen -->
                     <div class="mb-8">
                         <label for="poster" class="block text-sm font-semibold text-gray-700 mb-3">

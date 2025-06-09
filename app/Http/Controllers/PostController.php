@@ -10,10 +10,19 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     // Listado de recetas
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('user')->where('habilitated', true)->latest()->get();
-        return view('post.index', compact('posts'));
+        $query = Post::with('user')->where('habilitated', true);
+        
+        // Filtro por categoría
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        
+        $posts = $query->latest()->get();
+        $selectedCategory = $request->get('category');
+        
+        return view('post.index', compact('posts', 'selectedCategory'));
     }
 
     // Ver detalles
@@ -33,12 +42,15 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|min:3|max:255',
+            'category' => 'required|in:comida,postre',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'content' => 'required|string|min:10',
         ], [
             'title.required' => 'El título es obligatorio.',
             'title.min' => 'El título debe tener al menos 3 caracteres.',
             'title.max' => 'El título no puede exceder 255 caracteres.',
+            'category.required' => 'La categoría es obligatoria.',
+            'category.in' => 'La categoría debe ser: comida o postre.',
             'poster.image' => 'El archivo debe ser una imagen.',
             'poster.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif, webp.',
             'poster.max' => 'La imagen no puede ser mayor a 2MB.',
@@ -54,6 +66,7 @@ class PostController extends Controller
         Post::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
+            'category' => $request->category,
             'poster' => $path,
             'content' => $request->content,
             'habilitated' => true,
@@ -73,12 +86,15 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|string|min:3|max:255',
+            'category' => 'required|in:comida,postre',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'content' => 'required|string|min:10',
         ], [
             'title.required' => 'El título es obligatorio.',
             'title.min' => 'El título debe tener al menos 3 caracteres.',
             'title.max' => 'El título no puede exceder 255 caracteres.',
+            'category.required' => 'La categoría es obligatoria.',
+            'category.in' => 'La categoría debe ser: comida o postre.',
             'poster.image' => 'El archivo debe ser una imagen.',
             'poster.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif, webp.',
             'poster.max' => 'La imagen no puede ser mayor a 2MB.',
@@ -95,6 +111,7 @@ class PostController extends Controller
         }
 
         $post->title = $request->title;
+        $post->category = $request->category;
         $post->content = $request->content;
         $post->save();
 
