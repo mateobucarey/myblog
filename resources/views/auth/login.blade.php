@@ -44,9 +44,7 @@
                     <span class="text-sm text-gray-600">Recordarme</span>
                 </label>
 
-                <a class="text-sm text-blue-600 hover:underline" href="{{ route('password.request') }}">
-                    ¿Olvidaste tu contraseña?
-                </a>
+                
             </div>
 
             <button type="submit"
