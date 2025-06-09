@@ -21,14 +21,14 @@ Este proyecto es un blog de recetas tradicionales argentinas, desarrollado con L
 ## 🚀 Instalación
 
 1. Cloná el repositorio:
-    git clone 
-    cd myblog
-    composer install
-    npm install
-    cp .env.example .env
-    php artisan key:generate
-    php artisan migrate
-    php artisan storage:link
+- git clone 
+- cd myblog
+- composer install
+- npm install
+- cp .env.example .env
+- php artisan key:generate
+- php artisan migrate
+- php artisan storage:link
 
-    php artisan serve
-    npm run dev
+- php artisan serve
+- npm run dev
