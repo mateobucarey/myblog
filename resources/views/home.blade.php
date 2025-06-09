@@ -107,9 +107,9 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-2">
                                         <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white text-xs font-semibold">{{ substr($post->user->name, 0, 1) }}</span>
+                                            <span class="text-white text-xs font-semibold">{{ $post->user ? substr($post->user->name, 0, 1) : '?' }}</span>
                                         </div>
-                                        <span class="text-sm text-gray-500">{{ $post->user->name }}</span>
+                                        <span class="text-sm text-gray-500">{{ $post->user ? $post->user->name : 'Usuario desconocido' }}</span>
                                     </div>
                                     
                                     <a href="{{ route('posts.show', $post) }}" class="inline-flex items-center text-orange-600 hover:text-orange-700 font-medium text-sm">
