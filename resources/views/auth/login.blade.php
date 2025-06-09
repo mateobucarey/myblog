@@ -40,8 +40,6 @@
 
             <div class="flex items-center justify-between mb-6">
                 <label class="flex items-center">
-                    <input type="checkbox" name="remember" class="mr-2">
-                    <span class="text-sm text-gray-600">Recordarme</span>
                 </label>
 
                 
