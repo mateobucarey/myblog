@@ -6,17 +6,21 @@ use App\Http\Controllers\PostController;
 
 Route::get('/', [HomeController::class, 'getHome'])->name('home');
 
-Route::get('/posts', [PostController::class, 'getIndex'])->name('posts.index');
-Route::get('/post/show/{id}', [PostController::class, 'getShow'])->name('posts.show');
+// Rutas públicas para ver posts
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
-Route::get('/post/create', [PostController::class, 'getCreate'])->name('posts.create');
-Route::post('/post/store', [PostController::class, 'store'])->name('posts.store');
+// Rutas que requieren autenticación para crear, editar y eliminar
+Route::middleware('auth')->group(function () {
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::get('/posts/{post}/delete', [PostController::class, 'confirmDelete'])->name('posts.delete');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+});
 
-Route::get('/post/edit/{id}', [PostController::class, 'getEdit'])->name('posts.edit');
-Route::put('/post/update/{id}', [PostController::class, 'update'])->name('posts.update');
-
-Route::get('/post/delete/{id}', [PostController::class, 'getDelete'])->name('posts.delete');
-Route::delete('/post/destroy/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
+// Ruta para mostrar posts individuales (debe ir después de las rutas específicas)
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
 // Login/Logout
 Route::get('/login', function () {

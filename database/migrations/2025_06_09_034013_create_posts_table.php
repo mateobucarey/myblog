@@ -10,9 +10,10 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('poster'); // Ruta de la imagen subida
-            $table->boolean('habilitated')->default(false); // Si está habilitado para mostrarse
+            $table->string('poster')->nullable(); // Ruta de la imagen subida
+            $table->boolean('habilitated')->default(true); // Si está habilitado para mostrarse
             $table->text('content');
             $table->timestamps(); // created_at y updated_at
         });
