@@ -9,35 +9,34 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    // Listado de recetas
+    // Mostrar lista de recetas, con opción de filtrar por categoría
     public function index(Request $request)
     {
         $query = Post::with('user')->where('habilitated', true);
-        
-        // Filtro por categoría
+
         if ($request->filled('category')) {
             $query->where('category', $request->category);
         }
-        
+
         $posts = $query->latest()->get();
         $selectedCategory = $request->get('category');
-        
+
         return view('post.index', compact('posts', 'selectedCategory'));
     }
 
-    // Ver detalles
+    // Mostrar una receta específica
     public function show(Post $post)
     {
         return view('post.show', compact('post'));
     }
 
-    // Formulario de creación
+    // Mostrar formulario para crear una receta
     public function create()
     {
         return view('post.create');
     }
 
-    // Guardar nueva receta
+    // Guardar nueva receta en la base de datos
     public function store(Request $request)
     {
         $request->validate([
@@ -45,17 +44,6 @@ class PostController extends Controller
             'category' => 'required|in:comida,postre',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'content' => 'required|string|min:10',
-        ], [
-            'title.required' => 'El título es obligatorio.',
-            'title.min' => 'El título debe tener al menos 3 caracteres.',
-            'title.max' => 'El título no puede exceder 255 caracteres.',
-            'category.required' => 'La categoría es obligatoria.',
-            'category.in' => 'La categoría debe ser: comida o postre.',
-            'poster.image' => 'El archivo debe ser una imagen.',
-            'poster.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif, webp.',
-            'poster.max' => 'La imagen no puede ser mayor a 2MB.',
-            'content.required' => 'El contenido es obligatorio.',
-            'content.min' => 'El contenido debe tener al menos 10 caracteres.',
         ]);
 
         $path = null;
@@ -75,13 +63,13 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Receta creada correctamente.');
     }
 
-    // Formulario de edición
+    // Mostrar formulario para editar una receta
     public function edit(Post $post)
     {
         return view('post.edit', compact('post'));
     }
 
-    // Guardar cambios
+    // Actualizar una receta existente
     public function update(Request $request, Post $post)
     {
         $request->validate([
@@ -89,36 +77,25 @@ class PostController extends Controller
             'category' => 'required|in:comida,postre',
             'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'content' => 'required|string|min:10',
-        ], [
-            'title.required' => 'El título es obligatorio.',
-            'title.min' => 'El título debe tener al menos 3 caracteres.',
-            'title.max' => 'El título no puede exceder 255 caracteres.',
-            'category.required' => 'La categoría es obligatoria.',
-            'category.in' => 'La categoría debe ser: comida o postre.',
-            'poster.image' => 'El archivo debe ser una imagen.',
-            'poster.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif, webp.',
-            'poster.max' => 'La imagen no puede ser mayor a 2MB.',
-            'content.required' => 'El contenido es obligatorio.',
-            'content.min' => 'El contenido debe tener al menos 10 caracteres.',
         ]);
 
         if ($request->hasFile('poster')) {
-            // Borrar anterior si existe
             if ($post->poster) {
                 Storage::disk('public')->delete($post->poster);
             }
             $post->poster = $request->file('poster')->store('posters', 'public');
         }
 
-        $post->title = $request->title;
-        $post->category = $request->category;
-        $post->content = $request->content;
-        $post->save();
+        $post->update([
+            'title' => $request->title,
+            'category' => $request->category,
+            'content' => $request->content,
+        ]);
 
         return redirect()->route('posts.index')->with('success', 'Receta actualizada correctamente.');
     }
 
-    // Eliminar receta
+    // Eliminar una receta
     public function destroy(Post $post)
     {
         if ($post->poster) {
@@ -130,7 +107,7 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Receta eliminada correctamente.');
     }
 
-    // Confirmar eliminación (método adicional para mostrar confirmación)
+    // Mostrar confirmación antes de eliminar
     public function confirmDelete(Post $post)
     {
         return view('post.delete', compact('post'));
